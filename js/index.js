@@ -21,10 +21,13 @@
 
 window.addEventListener('DOMContentLoaded', () => {
   const start = document.querySelector('#start');
+  const totalScore = document.getElementById('score');
   start.addEventListener('click', function (e) {
     document.querySelector('#quizBlock').style.display = 'block';
     start.style.display = 'none';
   });
+   
+  
   // quizArray QUESTIONS & ANSWERS
   // q = QUESTION, o = OPTIONS, a = CORRECT ANSWER
   // Basic ideas from https://code-boxx.com/simple-javascript-quiz/
@@ -40,10 +43,22 @@ window.addEventListener('DOMContentLoaded', () => {
       a: 3,
     },
     {
-      q: 'What is the capital of Australia',
+      q: 'What is the capital of Australia?',
       o: ['Sydney', 'Canberra', 'Melbourne', 'Perth'],
       a: 1,
     },
+    {
+      q: 'What is the currency of Japan?',
+      o: ['Dollar', 'Yen', 'Dirham', 'Real'],
+      a: 1,
+    },
+    {
+      q: 'Which is the largest country by population?',
+      o: ['Mexico', 'India', 'China', 'Russia'],
+      a: 2,
+    },
+    
+
   ];
 
   // function to Display the quiz questions and answers from the object
@@ -63,7 +78,24 @@ window.addEventListener('DOMContentLoaded', () => {
     });
   };
 
+
+  // timer
+  var count = 20;
+var interval = setInterval(function(){
+  document.getElementById('time').innerHTML=count;
+  count--;
+  if (count <= 0){
+    clearInterval(interval);
+    document.getElementById('time').innerHTML='Finished';
+    calculateScore();
+  }
+}, 1000);
+
+
+
+
   // Calculate the score
+  
   const calculateScore = () => {
     let score = 0;
     quizArray.map((quizItem, index) => {
@@ -71,20 +103,42 @@ window.addEventListener('DOMContentLoaded', () => {
         //highlight the li if it is the correct answer
         let li = `li_${index}_${i}`;
         let r = `radio_${index}_${i}`;
-        liElement = document.querySelector('#' + li);
+        liElement = document.querySelector('#'+ li);
         radioElement = document.querySelector('#' + r);
 
         if (quizItem.a == i) {
           //change background color of li element here
+          liElement.style.backgroundColor= 'green';
         }
 
         if (radioElement.checked) {
           // code for task 1 goes here
+          if(quizItem.a==i){
+            score++;
+          }
+          console.log(score);
+          totalScore.innerText = `Your score ${score}`;
         }
       }
+      
     });
+    
+    
   };
+  
 
+  const submit = document.querySelector('#btnSubmit');
+  submit.addEventListener('click', calculateScore);
+
+const reset = document.querySelector('#btnReset');
+reset.addEventListener('click', function (e) {
+  window.location.reload();
+});
   // call the displayQuiz function
   displayQuiz();
+
 });
+
+
+
+
